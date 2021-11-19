@@ -3,9 +3,6 @@ from instagrapi.types import UserShort
 from typing import List
 
 
-max_people = 139
-counter = 0
-
 class Bot:
     def __init__(self):
         self.client = Client()
@@ -37,20 +34,16 @@ class Person(object):
     subscribes: List[object] = []
     subscribers: List[object] = []
     name: str
-    id: object
     desc: str = 'NULL'
     friends: List[object]
+    picture_url: str
 
-    def __init__(self, name='NULL', desc='NULL', picture_url='NULL', final=exit):
-        global counter
-        if counter < max_people:
-            self.name = name
-            self.id = bot.get_id_from_username(self.name)
-            counter += 1
-            print(counter, self.name)
+    def __init__(self, name='NULL', desc='NULL', picture_url='NULL', search_friends=True):
+        self.name = name
+        self.picture_url = picture_url
+        self.desc = desc
+        if search_friends:
             self.fetch_friends()
-        else:
-            final()
 
     def fetch_friends(self):
         self.subscribers = bot.get_subscribers(self.name)
@@ -78,7 +71,8 @@ def get_persons(shorts) -> List[Person]:
 def UserShort_to_Person(usershort: UserShort):
     return Person(name=usershort.username,
                   desc=usershort.full_name,
-                  picture_url=usershort.profile_pic_url)
+                  picture_url=usershort.profile_pic_url,
+                  search_friends=False)
 
 def cross_people(subscribers: List[Person],
                  subscribes: List[Person]):
